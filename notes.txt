@@ -1,0 +1,5 @@
+you get a set amount of shots to get a ball through each course
+high scores
+multiple levels in a "map"
+when you pull back on the ball there is something to show where your cursor is in relation to the ball
+there is no path prediction (too easy)

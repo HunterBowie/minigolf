@@ -1,8 +1,40 @@
+from abc import ABC, abstractmethod
+
 import pygame
 import pymunk
 import pymunk.pygame_util
 
 import constants
+
+
+class PhysicsObject(ABC):
+    def add_to_space(self, space: pymunk.Space):
+        space.add(self.body, self.shape)
+
+
+class Ball(PhysicsObject):
+    def __init__(self, pos: tuple[int, int]) -> None:
+        mass = 1
+        self.body = pymunk.Body(mass, inertia)
+        radius = 30
+        inertia = pymunk.moment_for_circle(mass, 0, radius, (0, 0))
+        self.body.position = pos
+        self.shape = pymunk.Circle(self.body, radius, (0, 0))
+        self.shape.elasticity = 1
+        self.shape.friction = 0.0
+
+
+class RectBarrier(PhysicsObject):
+    def __init__(self, pos: tuple[int, int], size: tuple[int, int]) -> None:
+        self.body = pymunk.Body(body_type=pymunk.Body.STATIC)
+        # body.position = pos
+        self.rect = pygame.Rect(pos[0], pos[1], size[0], size[1])
+        self.shape = pymunk.Poly(self.body, [
+            self.rect.topleft, self.rect.topright, self.rect.bottomleft, self.rect.bottomright])
+
+        self.shape.elasticity = 1
+        self.shape.friction = 0
+
 
 pygame.init()
 
@@ -34,8 +66,8 @@ def add_ball(pos: tuple[int]) -> pymunk.Body:
     body = pymunk.Body(mass, inertia)
     body.position = pos
     shape = pymunk.Circle(body, radius, (0, 0))
-    shape.elasticity = 0.95
-    shape.friction = 0.1
+    shape.elasticity = 1
+    shape.friction = 0.0
     space.add(body, shape)
     return body
 
@@ -45,8 +77,8 @@ def add_floor(height: int) -> None:
     shape = pymunk.Segment(body, (0, constants.WINDOW_HEIGHT-height),
                            (constants.WINDOW_WIDTH, constants.WINDOW_HEIGHT-height), 5)
 
-    shape.elasticity = .3
-    shape.friction = 0.1
+    shape.elasticity = 1
+    shape.friction = 0.0
     space.add(body, shape)
 
 
@@ -55,14 +87,16 @@ def add_slanted_floor(height: int) -> None:
     shape = pymunk.Segment(body, (100, constants.WINDOW_HEIGHT-height-100),
                            (constants.WINDOW_WIDTH-300, constants.WINDOW_HEIGHT-height + 20), 5)
 
-    shape.elasticity = .3
-    shape.friction = .6
+    shape.elasticity = 1
+    shape.friction = .0
     space.add(body, shape)
 
 
 def main():
     add_floor(20)
-    add_slanted_floor(220)
+    # add_slanted_floor(220)
+    box = RectBarrier((50, 50), (60, 60))
+    box.add_to_space(space)
     clock = pygame.time.Clock()
     running = True
     held_pos = 0, 0
