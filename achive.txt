@@ -1,0 +1,55 @@
+
+def add_ball_with_joint(pos: tuple[int]) -> None:
+    body = add_ball(pos)
+    pj = pymunk.PinJoint(space.static_body, body,
+                         (body.position[0], -125 + body.position[1]), (0, 0))
+    space.add(pj)
+
+
+def add_balls_with_spring(pos: tuple[int]) -> None:
+    body1 = add_ball(pos)
+    body2 = add_ball((pos[0], pos[1] + 80))
+    pj = pymunk.PivotJoint(body1,
+                           body2,
+                           (340, 300),
+                           )
+    space.add(pj)
+
+
+def add_ball_with_force(pos: tuple[int], force: tuple[float, float]) -> pymunk.Body:
+    body = add_ball(pos)
+    body.apply_force_at_local_point(force)
+    return body
+
+
+def add_ball(pos: tuple[int]) -> pymunk.Body:
+    mass = 1
+    radius = 30
+    inertia = pymunk.moment_for_circle(mass, 0, radius, (0, 0))
+    body = pymunk.Body(mass, inertia)
+    body.position = pos
+    shape = pymunk.Circle(body, radius, (0, 0))
+    shape.elasticity = 1
+    shape.friction = 0.0
+    space.add(body, shape)
+    return body
+
+
+def add_floor(height: int) -> None:
+    body = pymunk.Body(body_type=pymunk.Body.STATIC)
+    shape = pymunk.Segment(body, (0, constants.WINDOW_HEIGHT-height),
+                           (constants.WINDOW_WIDTH, constants.WINDOW_HEIGHT-height), 5)
+
+    shape.elasticity = 1
+    shape.friction = 0.0
+    space.add(body, shape)
+
+
+def add_slanted_floor(height: int) -> None:
+    body = pymunk.Body(body_type=pymunk.Body.STATIC)
+    shape = pymunk.Segment(body, (100, constants.WINDOW_HEIGHT-height-100),
+                           (constants.WINDOW_WIDTH-300, constants.WINDOW_HEIGHT-height + 20), 5)
+
+    shape.elasticity = 1
+    shape.friction = .0
+    space.add(body, shape)
