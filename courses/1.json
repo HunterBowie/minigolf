@@ -1,0 +1,20 @@
+{
+    "course_name": "test course",
+    "difficulty": 1,
+    "blocks": [
+        {
+            "type": 8,
+            "pos": [
+                100,
+                100
+            ]
+        },
+        {
+            "type": 1,
+            "pos": [
+                500,
+                345
+            ]
+        }
+    ]
+}
